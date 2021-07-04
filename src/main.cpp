@@ -41,6 +41,9 @@ std::vector<std::string> dir_lidar_points;
 std::vector<std::thread> threads_point;
 std::vector<bool> running_check;
 int thread_num = 0;
+std::vector<std::string> lidar_names;
+
+std::vector<double> last_input_time;
 
 std::vector<FILE*> imu_file;
 
@@ -199,7 +202,19 @@ void point_handle(const sensor_msgs::PointCloud2::ConstPtr & cloud_msg, size_t i
         std::stringstream ss;
         ss << dir_lidar_points[idx] << "/" << cloud_t.header.stamp << ".bin";
 
-        // ROS_INFO("[LIDAR] Data saved to %s", ss.str().c_str());
+        for(size_t i = 0; i < lidar_names.size(); ++i) {
+            std::string blink;
+            if(i==idx) {
+                blink = "▣";
+            } else {
+                // blink = "X";
+            }
+
+            printf("%s :\t %s\n", lidar_names[i].c_str(), blink.c_str());
+        }
+
+        ROS_INFO("[LIDAR] Heard from %s", lidar_names[idx].c_str());
+        ROS_INFO("[LIDAR] Data saved to %s", ss.str().c_str());
         ROS_INFO("[LIDAR] Running Thread: %d", num_running_thread);
 
     } else {
@@ -239,8 +254,8 @@ int main(int argc, char** argv) {
         std::cout<<"No typed lidar names"<<std::endl;
         return 0;
     }
+    lidar_names.clear();
 
-    std::vector<std::string> lidar_names;
     for(int i = 0; i <argc-1; ++i) {
         lidar_names.push_back(std::string(argv[i+1]));
         std::cout<<"lidar_names: "<<lidar_names[i]<<std::endl;
