@@ -127,6 +127,7 @@ void save_pcd(sensor_msgs::PointCloud2 cloud_t,
     sensor_msgs::PointCloud2Iterator<uint16_t> iter_reflectivity(cloud_t, "reflectivity");
     sensor_msgs::PointCloud2Iterator<uint16_t> iter_ambient(cloud_t, "ambient");
     sensor_msgs::PointCloud2Iterator<uint32_t> iter_range(cloud_t, "range");
+    // sensor_msgs::PointCloud2Iterator<uint8_t> iter_ring(cloud_t, "ring");
 
     while(iter_x!=iter_x.end()) {
         binfile.write((char*)&*iter_x, sizeof(float));
@@ -137,6 +138,7 @@ void save_pcd(sensor_msgs::PointCloud2 cloud_t,
         binfile.write((char*)&*iter_reflectivity, sizeof(uint16_t));
         binfile.write((char*)&*iter_ambient, sizeof(uint16_t));
         binfile.write((char*)&*iter_range, sizeof(uint32_t));
+        // binfile.write((char*)&*iter_ring, sizeof(uint8_t));
 
         ++iter_x;
         ++iter_y;
@@ -146,6 +148,7 @@ void save_pcd(sensor_msgs::PointCloud2 cloud_t,
         ++iter_reflectivity;
         ++iter_ambient;
         ++iter_range;
+        // ++iter_ring;
     }
 
     binfile.close();
